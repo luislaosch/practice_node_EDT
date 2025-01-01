@@ -2,12 +2,19 @@ const UserService = require ('../services/userService')
 
 const userService = new UserService()
 
-exports.getAllUsers = (req,res)=>{
-    res.status(200).send('Accediendo a todos los usuarios')
+exports.getAllUsers = async (req,res)=>{
+    const users = await userService.getAll()
+    res.status(200).send(users)
 }
 
-exports.getUser = (req,res)=>{
-    res.status(200).send('Accediendo al usuario: '+ req.params.id)
+exports.getUser = async (req,res)=>{
+    const id = req.params.id
+    const user = await userService.filterById(id)
+    if (!user){
+        return res.status(400).json({'message':"Usuario no encontrado"})
+    }
+    // res.status(200).send('Accediendo al usuario: '+ req.params.id)
+    res.status(200).json(user)
 }
 
 exports.createUser = async (req,res)=>{
@@ -24,15 +31,35 @@ exports.createUser = async (req,res)=>{
     
 }
 
-exports.updateUser = (req,res)=>{
-    console.log('Actualizar al usuario: '+ req.params.id)
+exports.updateUser = async(req,res)=>{
+    // console.log('Actualizar al usuario: '+ req.params.id)
     let data = req.body
-    const {name, lastname, email, phone} = data
-    console.log(name, lastname, email, phone)
-    res.status(200).send("Usuario Actualizado")
+    const id = req.params.id
+    const user = await userService.filterById(id)
+    if (!user){
+        return res.status(400).json({'message':"Usuario no encontrado"})
+    }
+    
+    await userService.update(id,data)
+
+    // res.status(200).send('Accediendo al usuario: '+ req.params.id)
+    res.status(200).json(user)
+
+    // const {name, lastname, email, phone} = data
+    // console.log(name, lastname, email, phone)
+    // res.status(200).send("Usuario Actualizado")
 }
 
-exports.deleteUser = (req,res)=>{
-    console.log('Eliminar al usuario: '+ req.params.id)
+exports.deleteUser = async (req,res)=>{
+    const id = req.params.id
+    const user = await userService.filterById(id)
+    if (!user){
+        return res.status(400).json({'message':"Usuario no encontrado"})
+    }
+    
+    await userService.delete(id)
+
+
+    // console.log('Eliminar al usuario: '+ req.params.id)
     res.status(200).send("usuario Eliminado")
 }
