@@ -5,6 +5,7 @@ const path = require('path')
 const userLoggerd = require('./middlewares/userLogged')
 const userRouter = require('./routers/userRouter')
 const authRouter = require('./routers/authRouter')
+const dashboardRouter = require('./routers/dashboardRouter')
 const connection = require('./database/connection')
 
 app.get('/', (req, res)=>{
@@ -27,6 +28,7 @@ app.use(morgan('dev'))
 // app.use(userLoggerd)
 app.use('/users',userRouter)
 app.use('/auth',authRouter)
+app.use('/dashboard',dashboardRouter)
 app.listen(3000,()=>{
     console.log("puerto 3000")
 })
