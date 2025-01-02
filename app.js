@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const path = require('path')
 const userLoggerd = require('./middlewares/userLogged')
 const userRouter = require('./routers/userRouter')
+const authRouter = require('./routers/authRouter')
 const connection = require('./database/connection')
 
 app.get('/', (req, res)=>{
@@ -25,6 +26,7 @@ app.use(morgan('dev'))
 //usando el middleware cre
 // app.use(userLoggerd)
 app.use('/users',userRouter)
+app.use('/auth',authRouter)
 app.listen(3000,()=>{
     console.log("puerto 3000")
 })
