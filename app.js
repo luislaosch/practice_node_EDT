@@ -2,6 +2,7 @@ const express = require ('express')
 const app = express()
 const morgan = require('morgan')
 const path = require('path')
+const socket = require("socket.io")
 const userLoggerd = require('./middlewares/userLogged')
 const userRouter = require('./routers/userRouter')
 const authRouter = require('./routers/authRouter')
@@ -29,7 +30,12 @@ app.use(morgan('dev'))
 app.use('/users',userRouter)
 app.use('/auth',authRouter)
 app.use('/dashboard',dashboardRouter)
-app.listen(3000,()=>{
+
+const server = require('http').createServer(app);
+const io = socket(server);
+require('./socket')(io)
+
+server.listen(3000,()=>{
     console.log("puerto 3000")
 })
 
